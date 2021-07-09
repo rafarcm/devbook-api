@@ -42,9 +42,9 @@ func (repositorio publicacoes) Buscar(ID uint64) ([]models.Publicacao, error) {
 	linhas, erro := repositorio.db.Query(
 		`select distinct p.*, u.nick 
 		from publicacoes p 
-		inner join usuarios u on p.autor_id = u.id 
-		inner join seguidores s on p.autor_id = s.usuario_id 
-		where p.id = ? or s.seguidor_id = ? 
+		inner join usuarios u on u.id = p.autor_id
+		left outer join seguidores s on p.autor_id = s.usuario_id 
+		where u.id = ? or s.seguidor_id = ? 
 		order by 1 desc;`,
 		ID, ID)
 	if erro != nil {
